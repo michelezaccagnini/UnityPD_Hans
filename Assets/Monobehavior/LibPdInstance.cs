@@ -794,7 +794,7 @@ public class LibPdInstance : MonoBehaviour
             patchName = patch.name;
             if ((lastName != patchName) || string.IsNullOrEmpty(patchDir) || patchDir.Contains("StreamingAssets"))
             {
-                patchDir = AssetDatabase.GetAssetPath(patch.GetInstanceID());
+                patchDir = AssetDatabase.GetAssetPath(patch); 
                 patchDir = patchDir.Substring(patchDir.IndexOf("Assets/StreamingAssets") + 22);
                 patchDir = patchDir.Substring(0, patchDir.LastIndexOf('/') + 1);
             }
@@ -1206,3 +1206,4 @@ public class LibPdInstance : MonoBehaviour
 
     #endregion
 }
+

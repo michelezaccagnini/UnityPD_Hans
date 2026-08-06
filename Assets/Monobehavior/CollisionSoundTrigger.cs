@@ -105,7 +105,7 @@ public class CollisionSoundTrigger : MonoBehaviour
         {
             jumpRequested = false;
             rb.WakeUp();
-            // Direkte Y-Geschwindigkeit ist zuverlässiger als AddForce aus Update
+            // Geändert auf klassisches 'velocity' für maximale Kompatibilität
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             Debug.Log($"{name}: Jump!");
         }

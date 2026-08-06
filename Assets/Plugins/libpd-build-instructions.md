@@ -17,8 +17,8 @@ instance.
 |---|---|---|
 | Android arm64 | `Assets/Plugins/Android/arm64-v8a/libpd.so` | Done — Pd 0.55.2, multi |
 | Linux x64 (editor) | `Assets/Plugins/x64/libpd.so` | Done — Pd 0.55.2, multi |
-| Windows x64 | `Assets/Plugins/x64/libpd.dll` | **TODO** (currently Pd 0.49) |
-| Windows x86 | `Assets/Plugins/x86/libpd.dll` | **TODO** |
+| Windows x64 | `Assets/Plugins/x64/libpd.dll` | Done — Pd 0.55.2, multi |
+| Windows x86 | `Assets/Plugins/x86/libpd.dll` | Done — Pd 0.55.2, multi |
 | macOS | `Assets/Plugins/libpd.bundle` | **TODO** (needs a Mac) |
 | iOS | `Assets/Plugins/libpd-ios-multi.a` | **TODO** (needs a Mac) |
 
@@ -101,12 +101,22 @@ make MULTI=true LDFLAGS="-static -static-libgcc"
 
 ### Cross-compiling Windows from Linux (optional)
 
+Install MinGW (`gcc-mingw-w64-x86-64-posix`, `mingw-w64-x86-64-dev`,
+`mingw-w64-common`, and the i686 equivalents if you ship 32-bit). From the libpd
+tree at `51b2cdc`:
+
 ```bash
-sudo apt install gcc-mingw-w64-x86-64 gcc-mingw-w64-i686
-make clean && make MULTI=true CC=x86_64-w64-mingw32-gcc \
-  CFLAGS="-DPDINSTANCE -DPDTHREADS" SOLIB_EXT=dll \
-  SOLIB_LDFLAGS="-shared -Wl,--export-all-symbols"
+make clean && make MULTI=true libpd \
+  CC=x86_64-w64-mingw32-gcc-posix \
+  PLATFORM_CFLAGS="-DWINVER=0x502 -DWIN32 -D_WIN32" \
+  LDFLAGS="-shared -Wl,--export-all-symbols -lws2_32 -lkernel32 -static-libgcc" \
+  SOLIB_EXT=dll
+# -> libs/libpd.dll  ->  Assets/Plugins/x64/libpd.dll
 ```
+
+Do **not** add `-DHAVE_ALLOCA_H` to `PLATFORM_CFLAGS` on MinGW (use `malloc.h`
+via `_WIN32` instead). Ship `libwinpthread-1.dll` from the matching MinGW `bin`
+or `lib` next to `libpd.dll` if `objdump -p` lists it.
 
 Native MSYS2 is more reliable than cross-compiling; prefer it if you can.
 

@@ -1,0 +1,4 @@
+#N canvas 160 160 450 252 12;
+#X listbox 59 58 20 0 0 0 - - - 0;
+#X text 80 7 Test1;
+#X text 124 36 Test2;
